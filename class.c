@@ -702,7 +702,7 @@ rb_include_module(VALUE klass, VALUE module)
     changed = include_modules_at(klass, RCLASS_ORIGIN(klass), module);
     if (changed < 0)
 	rb_raise(rb_eArgError, "cyclic include detected");
-    if (changed) rb_clear_cache();
+    if (changed) rb_clear_cache_by_class(klass);
 }
 
 static int
@@ -818,7 +818,7 @@ rb_prepend_module(VALUE klass, VALUE module)
     if (changed < 0)
 	rb_raise(rb_eArgError, "cyclic prepend detected");
     if (changed) {
-	rb_clear_cache();
+	rb_clear_cache_by_class(klass);
 	rb_vm_check_redefinition_by_prepend(klass);
     }
 }

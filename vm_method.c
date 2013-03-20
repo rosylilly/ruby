@@ -42,6 +42,54 @@ vm_clear_global_method_cache(void)
     }
 }
 
+static void
+vm_clear_method_cache_by_class(VALUE klass)
+{
+  struct cache_entry *ent, *end;
+
+  ent = cache;
+  end = ent + CACHE_SIZE;
+
+  while(ent < end) {
+    if(ent->klass == klass) {
+      ent->filled_version = 0;
+    }
+    ent++;
+  }
+}
+
+static void
+vm_clear_method_cache_by_id(ID id)
+{
+  struct cache_entry *ent, *end;
+
+  ent = cache;
+  end = ent + CACHE_SIZE;
+
+  while(ent < end) {
+    if(ent->mid == id) {
+      ent->filled_version = 0;
+    }
+    ent++;
+  }
+}
+
+static void
+vm_clear_method_cache_for_undef(VALUE klass, ID id)
+{
+  struct cache_entry *ent, *end;
+
+  ent = cache;
+  end = ent + CACHE_SIZE;
+
+  while(ent < end) {
+    if(ent->klass == klass && ent->mid == id) {
+      ent->filled_version = 0;
+    }
+    ent++;
+  }
+}
+
 void
 rb_clear_cache(void)
 {
@@ -51,19 +99,19 @@ rb_clear_cache(void)
 static void
 rb_clear_cache_for_undef(VALUE klass, ID id)
 {
-    rb_vm_change_state();
+    vm_clear_method_cache_for_undef(klass, id);
 }
 
 static void
 rb_clear_cache_by_id(ID id)
 {
-    rb_vm_change_state();
+    vm_clear_method_cache_by_id(id);
 }
 
 void
 rb_clear_cache_by_class(VALUE klass)
 {
-    rb_vm_change_state();
+  vm_clear_method_cache_by_class(klass);
 }
 
 VALUE
