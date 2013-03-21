@@ -2235,7 +2235,7 @@ set_const_visibility(VALUE mod, int argc, VALUE *argv, rb_const_flag_t flag)
 	id = rb_check_id(&val);
 	if (!id) {
 	    if (i > 0)
-		rb_clear_cache_by_class(mod);
+		rb_clear_cache();
 	    rb_name_error_str(val, "constant %"PRIsVALUE"::%"PRIsVALUE" not defined",
 			      rb_class_name(mod), QUOTE(val));
 	}
@@ -2245,12 +2245,12 @@ set_const_visibility(VALUE mod, int argc, VALUE *argv, rb_const_flag_t flag)
 	}
 	else {
 	    if (i > 0)
-		rb_clear_cache_by_class(mod);
+		rb_clear_cache();
 	    rb_name_error(id, "constant %"PRIsVALUE"::%"PRIsVALUE" not defined",
 			  rb_class_name(mod), QUOTE_ID(id));
 	}
     }
-    rb_clear_cache_by_class(mod);
+    rb_clear_cache();
 }
 
 /*
